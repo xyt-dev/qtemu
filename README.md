@@ -43,6 +43,12 @@ Source：
 
 ​	test_deviceWidget.cpp: 设备管理模块 模块测试
 
+
+
+DeviceModuleTest.exe： 设备管理模块测试 二进制可运行
+
+
+
 接下来说明设备管理模块的接口及使用方法：
 
 ```c++
