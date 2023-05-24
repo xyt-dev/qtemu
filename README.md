@@ -25,6 +25,24 @@ int main(int argc, char *argv[]){
 
 ### 设备管理模块
 
+文件结构：
+
+Source文件夹：源码存放文件
+
+Source/release: 输出文件
+
+Source：
+
+​	device.h: 设备信息表类 和 设备队列类
+
+​	deviceWidget.h: 设备处理模块 及 设备管理窗口和设备窗口
+
+​	MyThread.h: 测试用的线程类
+
+​	test_device: 设备信息表类 和 设备队列类 单元测试
+
+​	test_deviceWidget.cpp: 设备管理模块 模块测试
+
 接下来说明设备管理模块的接口及使用方法：
 
 ```c++
