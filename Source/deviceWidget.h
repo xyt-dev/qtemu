@@ -20,6 +20,8 @@
 const int DISK_BLOCK_SIZE = 4096;  //定义磁盘块大小 (4096 Byte)
 const int DISK_BLOCK_NUM = 20;     //定义磁盘块数量 (20 Blocks)
 
+const int MAX_DEVICE_PRIORITY = 10; // 最大优先级 running_v2
+
 #define SUCCESS 0
 #define FILE_ERR 1
 #define OVERSTEP 2
@@ -111,6 +113,9 @@ public:
         occupied_devices = deviceQueue.get_occupied_devices();
         devicePointer = occupied_devices.begin();
 
+        // 初始化运行记录 running_v2
+        resetRunningRecord();
+
         // 设置定时器
         timer = new QTimer(this);
         connect(timer, SIGNAL(timeout()), this, SLOT(running()));
@@ -120,6 +125,12 @@ public:
 
     void enableLogger() {logger = 1;}
     void disableLogger() {logger = 0;}
+
+    void resetRunningRecord() {
+        for(int i = 0; i <= MAX_DEVICE_PRIORITY; ++ i) {
+            running_record[i] = pow(2, i);
+        }
+    }
 
     string argi(string request, int index){ // 请求的第 i 个参数
         int i = 1;
@@ -155,20 +166,31 @@ public slots:
         statusLabel->setText(statusText);
     }
 
-    void running(){
+    void running(){ // running_v2
         // 更新occupied_devices
         if(devicePointer == occupied_devices.end()){
             occupied_devices = deviceQueue.get_occupied_devices();
             devicePointer = occupied_devices.begin();
             // 更新max_priority
-            max_priority = 0;
+            int _max_priority = 0;
             for(auto device : occupied_devices){
                 int priority = deviceTable[device.first].priority;
-                if(priority > max_priority) max_priority = priority;
+                if(priority > _max_priority) _max_priority = priority;
             }
+            max_priority = _max_priority;
+            // 防饿死机制 running_v2
+            while(running_record[max_priority] == 0){
+                -- max_priority;
+                if(max_priority == -1) {
+                    resetRunningRecord();
+                    max_priority = _max_priority;
+                }
+                // else if(logger) cout << "防饿死机制: 优先级 " << max_priority + 1 << " 的设备不执行\n";
+            }
+            -- running_record[max_priority];
         }
         // 遍历occupied_devices
-        while(devicePointer != occupied_devices.end() && deviceTable[devicePointer->first].priority < max_priority)
+        while(devicePointer != occupied_devices.end() && deviceTable[devicePointer->first].priority != max_priority)
             ++ devicePointer; // 优先级不是最高的设备不执行
         if(devicePointer == occupied_devices.end()) return;
         string device_name = devicePointer->first;
@@ -318,6 +340,7 @@ private:
     map<string, vector<DevRequest>>::iterator devicePointer; // 设备指针
     map<string, vector<DevRequest>> occupied_devices; // 临时设备字典
     int max_priority = 0; // 最高优先级
+    map<int, int> running_record; // 运行记录
 
     QWidget *centralWidget;
     QVBoxLayout *layout;

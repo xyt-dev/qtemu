@@ -16,6 +16,7 @@ public:
     }
     void run() override {
       // 测试设备处理线程
+      // Test 1
         int n = 100, m = 100;
         while(n --){
             deviceQueue.allocate_device("printer", "p1", "print,p1: hello printer num:" + to_string(m - n), 1);
@@ -50,5 +51,15 @@ public:
         QThread::msleep(10000);
         cout << "buffer0:" << deviceQueue.readInBuffer[0] << endl;
         cout << "buffer1:" << deviceQueue.readInBuffer[1] << endl;
+
+        // Test 2
+        emit stopSignal();
+        QThread::msleep(2000);
+        n = 1000, m = 1000;
+        while(n --){
+            deviceQueue.allocate_device("printer", "p1", "print,p1: hello printer num:" + to_string(m - n));
+            deviceQueue.allocate_device("screen", "p1", "print,p2: hello printer num:" + to_string(m - n));
+        }
+        emit startSignal();
     }
 };
