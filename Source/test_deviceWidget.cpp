@@ -37,7 +37,7 @@ int main(int argc, char *argv[]) {
 
     // 创建设备信息表并添加设备
     DeviceTable deviceTable;
-    deviceTable.add_device("screen1", "screen", 1);
+    deviceTable.add_device("screen1", "screen", 3);
     deviceTable.add_device("printer1", "printer");
     deviceTable.add_device("printer2", "printer");
     deviceTable.add_device("printer3", "printer");
