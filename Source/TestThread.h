@@ -34,7 +34,7 @@ public:
             deviceQueue._allocate_device("printer2", "p2", "print,p2: lower priority num:" + to_string(m - n), 0); // 较低优先级任务
         }
         emit startSignal(); // 启动设备处理
-        deviceQueue._allocate_device("MyScreen", "TestProcess", "print,已分配到printer2: 100个较高优先级任务, 100个较低优先级任务");
+        deviceQueue._allocate_device("MyScreen", "TestProcess", "print,已分配到printer2: 100个较高优先级任务 100个较低优先级任务");
         QThread::msleep(5000);
     // 测试任务优先机制
         deviceQueue._allocate_device("MyScreen", "TestProcess", "print,\n测试设备内任务队列优先级机制:printer3");
@@ -45,7 +45,7 @@ public:
             deviceQueue._allocate_device("printer3", "p3", "print,p3: p3(low) task num:" + to_string(m - n)); // 低优先级任务
             deviceQueue._allocate_device("printer3", "p4", "print,p4: p4(low) task num:" + to_string(m - n)); // 低优先级任务
         }
-        deviceQueue._allocate_device("MyScreen", "TestProcess", "print,已分配到printer3: p1 100个很高优先级任务, p2,p3,p4 各100个低优先级任务");
+        deviceQueue._allocate_device("MyScreen", "TestProcess", "print,已分配到printer3: p1 100个很高优先级任务 p2 p3 p4 各100个低优先级任务");
         QThread::msleep(10000);
     // 测试同种类设备间任务分配
         deviceQueue._allocate_device("MyScreen", "TestProcess", "print,\n测试同种类设备间任务分配机制:all printer");
