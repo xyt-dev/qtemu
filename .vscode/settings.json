@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "qpalette": "cpp",
+        "qstyle": "cpp",
+        "new": "cpp"
+    }
+}

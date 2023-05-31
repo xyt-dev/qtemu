@@ -12,6 +12,7 @@
 #include <QTextEdit>
 #include <QPlainTextEdit>
 #include <QScrollBar>
+#include <QStyle>
 
 #include <fstream>
 
@@ -38,7 +39,7 @@ public:
         layout = new QVBoxLayout(centralWidget);
 
         // 显示部件
-        printerWidget = new QPlainTextEdit(centralWidget);
+        printerWidget = new QTextEdit(centralWidget);
         layout->addWidget(printerWidget);
         // 状态标签
         statusLabel = new QLabel("Status: Free", this);
@@ -50,6 +51,8 @@ public:
 
     void setStatus(bool isBusy) {
         statusLabel->setText("Status: " + QString(isBusy ? "Busy" : "Free"));
+        if(isBusy) statusLabel->setStyleSheet("background-color: rgba(31, 31, 31, 180); color: rgb(241, 76, 76);");
+        else statusLabel->setStyleSheet("background-color: rgba(31, 31, 31, 180); color: rgb(230, 230, 230);");
     }
 
     void print(const QString& text) {
@@ -82,10 +85,10 @@ public:
         return SUCCESS;
     }    
 
-private:
+public:
     QWidget *centralWidget; // 中心窗口
     QVBoxLayout *layout; // 布局管理器
-    QPlainTextEdit *printerWidget; // 打印机组件
+    QTextEdit *printerWidget; // 打印机组件
     QLabel *statusLabel; // 状态标签
 
 };
@@ -145,26 +148,37 @@ public:
     }
 
 public slots:
-    void updateDeviceStatus() {
-        // 更新设备状态显示
-        QString statusText;
-        for (const auto &device : deviceTable.deviceList) {
-            statusText += "DeviceName: " + QString::fromStdString(device.name) + "  |  Type: "\
-             + QString::fromStdString(device.type) + "  |  DevicePriority: " + QString::number(device.priority)\ 
-             + "  |  Status: " + (device.status ? "Busy" : "Free") + "  |  Process: " + QString::fromStdString(device.pname) + "\n";
-            if (device.type == "screen") {
-                // 更新屏幕设备窗口的状态
-                screenWindows[device.name]->setStatus(device.status);
-            } else if (device.type == "printer") {
-                // 更新打印机设备窗口的状态
-                printerWindows[device.name]->setStatus(device.status);
-            } else if (device.type == "disk") {
-                // 更新磁盘设备窗口的状态
-                diskWindows[device.name]->setStatus(device.status);
-            }
+
+void updateDeviceStatus() {
+    // 更新设备状态显示
+    QString statusText;
+    for (const auto &device : deviceTable.deviceList) {
+        QString deviceStatus = device.status ? "Busy" : "Free";
+        QString statusLine = QString("DeviceName: %1  |  Type: %2  |  DevicePriority: %3  |  Status: %4  |  Process: %5")
+                                .arg(QString::fromStdString(device.name))
+                                .arg(QString::fromStdString(device.type))
+                                .arg(device.priority)
+                                .arg(deviceStatus)
+                                .arg(QString::fromStdString(device.pname));
+
+        // 创建带样式的文本
+        QString styledLine = device.status ? ("<font color='red'>" + statusLine + "</font>") : statusLine;
+
+        statusText += styledLine + "<br>";  // 添加换行符
+
+        if (device.type == "screen") {
+            // 更新屏幕设备窗口的状态
+            screenWindows[device.name]->setStatus(device.status);
+        } else if (device.type == "printer") {
+            // 更新打印机设备窗口的状态
+            printerWindows[device.name]->setStatus(device.status);
+        } else if (device.type == "disk") {
+            // 更新磁盘设备窗口的状态
+            diskWindows[device.name]->setStatus(device.status);
         }
-        statusLabel->setText(statusText);
     }
+    statusLabel->setText(statusText);
+}
 
     void running(){ // running_v2
         // 更新occupied_devices
@@ -314,20 +328,34 @@ public slots:
 
 private:
     void createDeviceWindows() {
+        QPalette palette;
+        int x = 0, y = 0;
         for (const auto &device : deviceTable.deviceList) {
             if (device.type == "screen") {
                 // 创建屏幕设备窗口
                 DeviceWindow *screenWindow = new DeviceWindow("screen", QString::fromStdString(device.name), this);
+                screenWindow->setStyleSheet("background-color: rgba(31, 31, 31, 180); color: rgb(230, 230, 230);");
+                screenWindow->move(x, y);
+                x += screenWindow->width();
+                y += screenWindow->height();
                 screenWindows[device.name] = screenWindow;
                 screenWindow->show();
             } else if (device.type == "printer") {
                 // 创建打印机设备窗口
                 DeviceWindow *printerWindow = new DeviceWindow("printer", QString::fromStdString(device.name), this);
+                printerWindow->setStyleSheet("background-color: rgba(31, 31, 31, 180); color: rgb(230, 230, 230);");
+                printerWindow->move(x, y);
+                x += printerWindow->width();
+                y += printerWindow->height();
                 printerWindows[device.name] = printerWindow;
                 printerWindow->show();
             } else if (device.type == "disk") {
                 // 创建磁盘设备窗口
                 DeviceWindow *diskWindow = new DeviceWindow("disk", QString::fromStdString(device.name), this);
+                diskWindow->setStyleSheet("background-color: rgba(31, 31, 31, 180); color: rgb(230, 230, 230);");
+                diskWindow->move(x, y);
+                x += diskWindow->width();
+                y += diskWindow->height();
                 diskWindows[device.name] = diskWindow;
                 diskWindow->show();
             }
