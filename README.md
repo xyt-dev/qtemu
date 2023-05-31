@@ -103,7 +103,7 @@ public:
         // 接口:
         // deviceQueue.allocate_device(string设备种类，string进程名称, string任务信息，int任务在该设备队列中的优先级【且数字越大优先级越高】)
         // 目前支持的任务种类: print任务(只支持 显示器screen，和打印机printer)、read/write任务(只支持 磁盘disk)
-        // 任务信息中参数以逗号分隔，磁盘块号范围为0~19，
+        // 任务信息中参数以逗号分隔，磁盘块号范围为0~99，共100个磁盘块
         // print任务:"print,text(要打印的字符串)"
         // write任务:"write,磁盘快号,距磁盘块首部偏移字节数,text(写入的字符串)"
         // read任务:"read,磁盘快号,距磁盘块首部偏移字节数,读取长度,读取到目标buffer号(1~999)"
