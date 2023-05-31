@@ -19,7 +19,7 @@
 #include <device.h>
 
 const int DISK_BLOCK_SIZE = 4096;  //定义磁盘块大小 (4096 Byte)
-const int DISK_BLOCK_NUM = 20;     //定义磁盘块数量 (20 Blocks)
+const int DISK_BLOCK_NUM = 100;     //定义磁盘块数量 (100 Blocks)
 
 const int MAX_DEVICE_PRIORITY = 10; // 最大优先级 running_v2
 
