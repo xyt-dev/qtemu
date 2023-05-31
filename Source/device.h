@@ -142,7 +142,7 @@ public:
     }
 
     // 分配设备给进程 (设备类型，进程名称，任务信息, 任务优先级)
-    bool _allocate_device(string device_name, string process_name, string request, int priority) {
+    bool _allocate_device(string device_name, string process_name, string request, int priority = 0) {
         // 如果设备不存在，则返回 false
         vector<string>::iterator it = find(devices.begin(), devices.end(), device_name);
         if (it == devices.end()) {

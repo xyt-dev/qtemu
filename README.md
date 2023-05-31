@@ -68,6 +68,7 @@ DeviceModuleTest.exe： 设备管理模块测试 二进制可运行
     deviceTable.add_device("printer2", "printer");
     deviceTable.add_device("printer3", "printer");
     deviceTable.add_device("disk1", "disk");
+// 磁盘设备就创建一个就行
 // 然后使用该设备信息表初始化一个设备任务队列
  DeviceQueue deviceQueue(deviceTable);
 // 然后创建设备管理主窗口，并令其显示 参数(设备信息表，设备队列，是否在命令行输出日志(1为是,0为否))
@@ -99,7 +100,7 @@ public:
         emit startSignal();  // 或启动
         // 不需要可以不用，设备处理程序默认启动
         
-        // 接口: 主要就一个:
+        // 接口:
         // deviceQueue.allocate_device(string设备种类，string进程名称, string任务信息，int任务在该设备队列中的优先级【且数字越大优先级越高】)
         // 目前支持的任务种类: print任务(只支持 显示器screen，和打印机printer)、read/write任务(只支持 磁盘disk)
         // 任务信息中参数以逗号分隔，磁盘块号范围为0~19，
@@ -108,16 +109,20 @@ public:
         // read任务:"read,磁盘快号,距磁盘块首部偏移字节数,读取长度,读取到目标buffer号(1~999)"
         // 示例:
         	// 打印到打印机
-            deviceQueue.allocate_device("printer", "p1", "print,p1: hello printer num:");
-            deviceQueue.allocate_device("printer", "p2", "print,p2: hello printer num:");
+            deviceQueue.allocate_device("printer", "p1", "print,p1: hello printer i'm p1");
+            deviceQueue.allocate_device("printer", "p2", "print,p2: hello printer i'm p2");
         	// 打印到显示器
-            deviceQueue.allocate_device("screen", "p3", "print,p3: hello printer num:", 2);
+            deviceQueue.allocate_device("screen", "p3", "print,p3: hello printer i'm p3", 2);
         	// 读取和写入
             deviceQueue.allocate_device("disk", "p0", "write,0,10,hello disk0.");
         	deviceQueue.allocate_device("disk", "p1", "read,0,10,12,0");
 			// 查看读取到的数据
         	if(!deviceQueue.readInBuffer[0].empty())
         		cout << deviceQueue.readInBuffer[0]; // index 为 0~999
+       // 如果确定要分配的设备名字，要将任务分配给该指定设备:
+       // 使用：deviceQueue._allocate(string设备名, string进程名称, string任务信息, int任务在该设备队列中的优先级【且数字越大优先级越高】)
+        // 示例:
+        	deviceQueue.allocate_device("HuaWeiPrinter", "p1", "print,p1: hello HuaWeiPrinter");
     }
 }
 ```
