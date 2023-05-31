@@ -1,6 +1,6 @@
 #include<deviceWidget.h>
 #include<device.h>
-#include<MyThread.h>
+#include<TestThread.h>
 // device类命令行输出测试:
 void allocateDevice(string device, string process, DeviceQueue &device_queue, string request = "", int priority = 0){
     bool result = device_queue.allocate_device(device, process, request, priority); 
@@ -51,7 +51,7 @@ int main(int argc, char *argv[]) {
     deviceMainWindow.show();
 
     // 其它线程模拟进程请求设备
-    MyThread thread(deviceQueue, deviceMainWindow);
+    TestThread thread(deviceQueue, deviceMainWindow);
     thread.start();
 
     return app.exec();

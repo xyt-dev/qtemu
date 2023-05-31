@@ -1,7 +1,7 @@
 #include <QThread>
 #include <device.h>
 #include <deviceWidget.h>
-class MyThread : public QThread {
+class TestThread : public QThread {
     Q_OBJECT
 private:
     DeviceQueue &deviceQueue;
@@ -10,22 +10,21 @@ signals:
     void startSignal();
     void stopSignal();
 public:
-    MyThread(DeviceQueue &deviceQueue, DeviceMainWindow &deviceMainWindow) : deviceQueue(deviceQueue), deviceMainWindow(deviceMainWindow) {
+    TestThread(DeviceQueue &deviceQueue, DeviceMainWindow &deviceMainWindow) : deviceQueue(deviceQueue), deviceMainWindow(deviceMainWindow) {
         connect(this, SIGNAL(startSignal()), &deviceMainWindow, SLOT(start()));
         connect(this, SIGNAL(stopSignal()), &deviceMainWindow, SLOT(stop()));
     }
     void run() override {
       // 测试设备处理线程
       // Test 1
-        // QThread::msleep(1000);
+        deviceQueue._allocate_device("MyScreen", "TestProcess", "print,测试分配给指定设备:printer1");
         int n = 100, m = 100;
         while(n --){
-            deviceQueue._allocate_device("printer1", "p1", "print,p1: hello printer num:" + to_string(m - n), 1);
-            deviceQueue._allocate_device("printer1", "p2", "print,p2: hello printer num:" + to_string(m - n), 2);
+            deviceQueue._allocate_device("printer1", "p1", "print,p1: hello printer num:" + to_string(m - n));
+            deviceQueue._allocate_device("printer1", "p2", "print,p2: hello printer num:" + to_string(m - n));
             deviceQueue._allocate_device("printer1", "p3", "print,p3: hello printer num:" + to_string(m - n));
-            deviceQueue._allocate_device("printer2", "p0", "print,p0: hello printer num:" + to_string(m - n));
-            deviceQueue._allocate_device("printer2", "p0", "print,p0: hello printer num:" + to_string(m - n));
         }
+        QThread::msleep(1000);
         n = 100, m = 100;
         while(n --){
             deviceQueue.allocate_device("printer", "p1", "print,p1: hello printer num:" + to_string(m - n), 1);
