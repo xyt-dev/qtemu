@@ -122,7 +122,7 @@ public:
        // 如果确定要分配的设备名字，要将任务分配给该指定设备:
        // 使用：deviceQueue._allocate(string设备名, string进程名称, string任务信息, int任务在该设备队列中的优先级【且数字越大优先级越高】)
         // 示例:
-        	deviceQueue.allocate_device("HuaWeiPrinter", "p1", "print,p1: hello HuaWeiPrinter");
+        	deviceQueue._allocate_device("HuaWeiPrinter", "p1", "print,p1: hello HuaWeiPrinter");
     }
 }
 ```
