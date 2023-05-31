@@ -64,7 +64,7 @@ public:
     int writeToFile(int blockIndex, int byteIndex, string text) {
         if(blockIndex < 0 || blockIndex >= DISK_BLOCK_NUM) return OVERSTEP; // 磁盘块索引越界
         if(byteIndex < 0 || byteIndex + text.size() >= DISK_BLOCK_SIZE) return OVERSTEP; // 字节索引越界
-        ofstream outfile("release/Disk/block" + to_string(blockIndex) + ".txt");
+        ofstream outfile("release/Disk/block" + to_string(blockIndex) + ".txt", std::ios::binary | std::ios::in | std::ios::out);
         if(!outfile.is_open()) return FILE_ERR; // 文件打开失败
         outfile.seekp(byteIndex, ios::beg); // 定位到第byteIndex个字节  ios::beg: 文件开头
         outfile << text; // 写入text
@@ -75,7 +75,7 @@ public:
     int readFromFile(int blockIndex, int byteIndex, int length, string &text) {
         if(blockIndex < 0 || blockIndex >= DISK_BLOCK_NUM) return OVERSTEP; // 磁盘块索引越界
         if(byteIndex < 0 || byteIndex + length >= DISK_BLOCK_SIZE) return OVERSTEP; // 字节索引越界
-        ifstream infile("release/Disk/block" + to_string(blockIndex) + ".txt");
+        ifstream infile("release/Disk/block" + to_string(blockIndex) + ".txt", std::ios::binary);
         if(!infile.is_open()) return FILE_ERR; // 文件打开失败
         infile.seekg(byteIndex, ios::beg); // 定位到第byteIndex个字节  ios::beg: 文件开头
         text.clear(); // 清空text
@@ -337,8 +337,8 @@ private:
                 DeviceWindow *screenWindow = new DeviceWindow("screen", QString::fromStdString(device.name), this);
                 screenWindow->setStyleSheet("background-color: rgba(31, 31, 31, 180); color: rgb(230, 230, 230);");
                 screenWindow->move(x, y);
-                x += screenWindow->width();
-                y += screenWindow->height();
+                x += 2 * screenWindow->width();
+                y += 2 * screenWindow->height();
                 screenWindows[device.name] = screenWindow;
                 screenWindow->show();
             } else if (device.type == "printer") {
@@ -346,8 +346,8 @@ private:
                 DeviceWindow *printerWindow = new DeviceWindow("printer", QString::fromStdString(device.name), this);
                 printerWindow->setStyleSheet("background-color: rgba(31, 31, 31, 180); color: rgb(230, 230, 230);");
                 printerWindow->move(x, y);
-                x += printerWindow->width();
-                y += printerWindow->height();
+                x += 2 * printerWindow->width();
+                y += 2 * printerWindow->height();
                 printerWindows[device.name] = printerWindow;
                 printerWindow->show();
             } else if (device.type == "disk") {
@@ -355,8 +355,8 @@ private:
                 DeviceWindow *diskWindow = new DeviceWindow("disk", QString::fromStdString(device.name), this);
                 diskWindow->setStyleSheet("background-color: rgba(31, 31, 31, 180); color: rgb(230, 230, 230);");
                 diskWindow->move(x, y);
-                x += diskWindow->width();
-                y += diskWindow->height();
+                x += 2 * diskWindow->width();
+                y += 2 * diskWindow->height();
                 diskWindows[device.name] = diskWindow;
                 diskWindow->show();
             }

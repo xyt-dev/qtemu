@@ -49,7 +49,6 @@ int main(int argc, char *argv[]) {
     // 创建设备管理窗口
     DeviceMainWindow deviceMainWindow(deviceTable, deviceQueue, 1);
     deviceMainWindow.show();
-
     // 其它线程模拟进程请求设备
     TestThread thread(deviceQueue, deviceMainWindow);
     thread.start();

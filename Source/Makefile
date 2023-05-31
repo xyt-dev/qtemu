@@ -198,7 +198,6 @@ Makefile: Source.pro ../../../DEVKIT/Qt/6.5.0/mingw_64/mkspecs/win32-g++/qmake.c
 		../../../DEVKIT/Qt/6.5.0/mingw_64/mkspecs/features/resolve_config.prf \
 		../../../DEVKIT/Qt/6.5.0/mingw_64/mkspecs/features/exclusive_builds_post.prf \
 		../../../DEVKIT/Qt/6.5.0/mingw_64/mkspecs/features/default_post.prf \
-		../../../DEVKIT/Qt/6.5.0/mingw_64/mkspecs/features/win32/console.prf \
 		../../../DEVKIT/Qt/6.5.0/mingw_64/mkspecs/features/entrypoint.prf \
 		../../../DEVKIT/Qt/6.5.0/mingw_64/mkspecs/features/precompile_header.prf \
 		../../../DEVKIT/Qt/6.5.0/mingw_64/mkspecs/features/warn_on.prf \
@@ -210,6 +209,7 @@ Makefile: Source.pro ../../../DEVKIT/Qt/6.5.0/mingw_64/mkspecs/win32-g++/qmake.c
 		../../../DEVKIT/Qt/6.5.0/mingw_64/mkspecs/features/uic.prf \
 		../../../DEVKIT/Qt/6.5.0/mingw_64/mkspecs/features/qmake_use.prf \
 		../../../DEVKIT/Qt/6.5.0/mingw_64/mkspecs/features/file_copies.prf \
+		../../../DEVKIT/Qt/6.5.0/mingw_64/mkspecs/features/win32/windows.prf \
 		../../../DEVKIT/Qt/6.5.0/mingw_64/mkspecs/features/testcase_targets.prf \
 		../../../DEVKIT/Qt/6.5.0/mingw_64/mkspecs/features/exceptions.prf \
 		../../../DEVKIT/Qt/6.5.0/mingw_64/mkspecs/features/yacc.prf \
@@ -218,6 +218,7 @@ Makefile: Source.pro ../../../DEVKIT/Qt/6.5.0/mingw_64/mkspecs/win32-g++/qmake.c
 		../../../DEVKIT/Qt/6.5.0/mingw_64/lib/Qt6Widgets.prl \
 		../../../DEVKIT/Qt/6.5.0/mingw_64/lib/Qt6Gui.prl \
 		../../../DEVKIT/Qt/6.5.0/mingw_64/lib/Qt6Core.prl \
+		../../../DEVKIT/Qt/6.5.0/mingw_64/lib/Qt6EntryPoint.prl \
 		../../../DEVKIT/Qt/6.5.0/mingw_64/mkspecs/features/build_pass.prf
 	$(QMAKE) -o Makefile Source.pro
 ../../../DEVKIT/Qt/6.5.0/mingw_64/mkspecs/features/spec_pre.prf:
@@ -348,7 +349,6 @@ Makefile: Source.pro ../../../DEVKIT/Qt/6.5.0/mingw_64/mkspecs/win32-g++/qmake.c
 ../../../DEVKIT/Qt/6.5.0/mingw_64/mkspecs/features/resolve_config.prf:
 ../../../DEVKIT/Qt/6.5.0/mingw_64/mkspecs/features/exclusive_builds_post.prf:
 ../../../DEVKIT/Qt/6.5.0/mingw_64/mkspecs/features/default_post.prf:
-../../../DEVKIT/Qt/6.5.0/mingw_64/mkspecs/features/win32/console.prf:
 ../../../DEVKIT/Qt/6.5.0/mingw_64/mkspecs/features/entrypoint.prf:
 ../../../DEVKIT/Qt/6.5.0/mingw_64/mkspecs/features/precompile_header.prf:
 ../../../DEVKIT/Qt/6.5.0/mingw_64/mkspecs/features/warn_on.prf:
@@ -360,6 +360,7 @@ Makefile: Source.pro ../../../DEVKIT/Qt/6.5.0/mingw_64/mkspecs/win32-g++/qmake.c
 ../../../DEVKIT/Qt/6.5.0/mingw_64/mkspecs/features/uic.prf:
 ../../../DEVKIT/Qt/6.5.0/mingw_64/mkspecs/features/qmake_use.prf:
 ../../../DEVKIT/Qt/6.5.0/mingw_64/mkspecs/features/file_copies.prf:
+../../../DEVKIT/Qt/6.5.0/mingw_64/mkspecs/features/win32/windows.prf:
 ../../../DEVKIT/Qt/6.5.0/mingw_64/mkspecs/features/testcase_targets.prf:
 ../../../DEVKIT/Qt/6.5.0/mingw_64/mkspecs/features/exceptions.prf:
 ../../../DEVKIT/Qt/6.5.0/mingw_64/mkspecs/features/yacc.prf:
@@ -368,6 +369,7 @@ Source.pro:
 ../../../DEVKIT/Qt/6.5.0/mingw_64/lib/Qt6Widgets.prl:
 ../../../DEVKIT/Qt/6.5.0/mingw_64/lib/Qt6Gui.prl:
 ../../../DEVKIT/Qt/6.5.0/mingw_64/lib/Qt6Core.prl:
+../../../DEVKIT/Qt/6.5.0/mingw_64/lib/Qt6EntryPoint.prl:
 ../../../DEVKIT/Qt/6.5.0/mingw_64/mkspecs/features/build_pass.prf:
 qmake: FORCE
 	@$(QMAKE) -o Makefile Source.pro

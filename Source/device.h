@@ -129,13 +129,15 @@ public:
 
 // 设备队列类
 class DeviceQueue {
-private:
+public:
     DeviceTable &deviceTable;                           // 设备信息表
 
     vector<string> devices;                             // 设备名列表
     vector<string> types;                               // 设备类型列表
     vector<string> available_devices;                   // 可用设备列表
     map<string, vector<DevRequest>> occupied_devices;   // 正在使用的设备字典，键为设备名，值为使用该设备的进程列表
+
+    map<string, int> countRecord;                         // 防饿死机制
 
     QMutex mutex1; // 加个锁不知道会不会出现bug
 
@@ -165,6 +167,14 @@ public:
 
         // 如果设备已经被使用，则将进程添加到设备的使用列表中
         if (occupied_devices.find(device_name) != occupied_devices.end()) {
+            // 防饿死机制
+            if(countRecord[device_name] % 100 == 0){
+                countRecord[device_name] = 0;
+                for(auto it = occupied_devices[device_name].begin(); it != occupied_devices[device_name].end(); ++ it){
+                    ++ (it->priority);
+                }
+            }
+            countRecord[device_name] ++;
             if(priority == 0 || occupied_devices[device_name].size() == 1) // 默认优先级或只有一个处理中的任务，直接添加到队列尾部
                 occupied_devices[device_name].push_back(DevRequest{process_name, request, priority});
             else{
@@ -187,6 +197,7 @@ public:
             available_devices.erase(it);
             occupied_devices[device_name] = vector<DevRequest>{};
             occupied_devices[device_name].push_back(DevRequest{process_name, request, priority});
+            countRecord[device_name] = 1; // 防饿死机制 初始化
             deviceTable.change_device_status(device_name, BUSY, process_name);
         }
         mutex1.unlock();
