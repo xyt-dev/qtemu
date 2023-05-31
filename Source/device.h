@@ -6,6 +6,8 @@
 #include <vector>
 #include <map>
 #include <algorithm>
+#include <QMutex>
+
 
 using namespace std;
 
@@ -22,17 +24,18 @@ struct DevRequest {
     int priority;       // 任务优先级
 };
 
+struct Device {
+    string name;
+    string type;
+    int status;
+    string pname;   // 占用或将占用的进程
+    int priority;   // 设备优先级
+};
+
 // 设备信息表
 class DeviceTable {
 public:
-    struct Device {
-        string name;
-        string type;
-        int status;
-        string pname;   // 占用或将占用的进程
-        int priority;   // 设备优先级
-    };
-
+    QMutex mutex2; // 加个锁不知道会不会出现bug
 public:
     int devNum;
     vector<Device> deviceList;
@@ -88,6 +91,13 @@ public:
         }
         return false;
     }
+    
+    vector<Device> get_device_list() {
+        mutex2.lock();
+        vector<Device> deviceListCopy = deviceList;
+        mutex2.unlock();
+        return deviceListCopy;
+    }
 
     void get_names(vector<string> &names) {
         for (vector<Device>::iterator it = deviceList.begin(); it != deviceList.end(); ++ it) {
@@ -127,6 +137,8 @@ private:
     vector<string> available_devices;                   // 可用设备列表
     map<string, vector<DevRequest>> occupied_devices;   // 正在使用的设备字典，键为设备名，值为使用该设备的进程列表
 
+    QMutex mutex1; // 加个锁不知道会不会出现bug
+
 public:
     DeviceQueue(DeviceTable &_deviceTable) : deviceTable(_deviceTable) {
         //初始化空闲设备列表
@@ -148,6 +160,8 @@ public:
         if (it == devices.end()) {
             return false;
         }
+        
+        mutex1.lock();
 
         // 如果设备已经被使用，则将进程添加到设备的使用列表中
         if (occupied_devices.find(device_name) != occupied_devices.end()) {
@@ -175,6 +189,7 @@ public:
             occupied_devices[device_name].push_back(DevRequest{process_name, request, priority});
             deviceTable.change_device_status(device_name, BUSY, process_name);
         }
+        mutex1.unlock();
         return true;
     }
 
@@ -221,6 +236,8 @@ public:
             return false;
         }
 
+        mutex1.lock();
+
         // 将进程从设备的使用列表中删除
         vector<DevRequest>& processes = occupied_devices[device_name];
         process_name = (*processes.begin()).pname;
@@ -234,17 +251,24 @@ public:
         } else {
             deviceTable.change_device_status(device_name, BUSY, (*processes.begin()).pname);
         }
+        mutex1.unlock();
         return true;
     }
 
     // 获取可用设备列表
-    vector<string> &get_available_devices() {
-        return available_devices;
+    vector<string> get_available_devices() {
+        mutex1.lock();
+        vector<string> available_devices_copy = available_devices;
+        mutex1.unlock();
+        return available_devices_copy;
     }
 
     // 获取正在使用设备的字典
-    map<string, vector<DevRequest>> &get_occupied_devices() {
-        return occupied_devices;
+    map<string, vector<DevRequest>> get_occupied_devices() {
+        mutex1.lock();
+        map<string, vector<DevRequest>> occupied_devices_copy = occupied_devices;
+        mutex1.unlock();
+        return occupied_devices_copy;
     }
 
     // 打印可用设备列表

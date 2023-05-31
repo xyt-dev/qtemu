@@ -1,27 +1,27 @@
 #include<deviceWidget.h>
 #include<device.h>
 #include<MyThread.h>
-// deviceÀàÃüÁîĞĞÊä³ö²âÊÔ:
+// deviceç±»å‘½ä»¤è¡Œè¾“å‡ºæµ‹è¯•:
 void allocateDevice(string device, string process, DeviceQueue &device_queue, string request = "", int priority = 0){
     bool result = device_queue.allocate_device(device, process, request, priority); 
     if (result) {
-        cout << "½ø³Ì " << process << " ³É¹¦ÇëÇóµ½Éè±¸ " << device << endl;
+        cout << "è¿›ç¨‹ " << process << " æˆåŠŸè¯·æ±‚åˆ°è®¾å¤‡ " << device << endl;
     }else {
-        cout << "Éè±¸ÀàĞÍ " << device << " ²»´æÔÚ" << endl;
+        cout << "è®¾å¤‡ç±»å‹ " << device << " ä¸å­˜åœ¨" << endl;
     }
 }
 void runDevice(string device, DeviceQueue &device_queue){
     string process;
     device_queue.release_device(device, process);
     if(process == NOEXIST) {
-        cout << "Éè±¸ " << device << " ²»´æÔÚ" << endl;
+        cout << "è®¾å¤‡ " << device << " ä¸å­˜åœ¨" << endl;
         return;
     }
     if(process == EMPTY){
-        cout <<  "Éè±¸ " << device << " µ±Ç°Ã»ÓĞÈÎÎñ" << endl;
+        cout <<  "è®¾å¤‡ " << device << " å½“å‰æ²¡æœ‰ä»»åŠ¡" << endl;
         return;
     }
-    cout << "Éè±¸ " << device << " ÒÑÖ´ĞĞ½ø³Ì " << process << " µÄÈÎÎñ" << endl;
+    cout << "è®¾å¤‡ " << device << " å·²æ‰§è¡Œè¿›ç¨‹ " << process << " çš„ä»»åŠ¡" << endl;
 }
 void printInfo(DeviceQueue &device_queue, DeviceTable &device_table){
     cout << "==== DeviceQueue Status =====" << endl;
@@ -35,21 +35,22 @@ void printInfo(DeviceQueue &device_queue, DeviceTable &device_table){
 int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
 
-    // ´´½¨Éè±¸ĞÅÏ¢±í²¢Ìí¼ÓÉè±¸
+    // åˆ›å»ºè®¾å¤‡ä¿¡æ¯è¡¨å¹¶æ·»åŠ è®¾å¤‡
     DeviceTable deviceTable;
     deviceTable.add_device("screen1", "screen", 3);
     deviceTable.add_device("printer1", "printer");
     deviceTable.add_device("printer2", "printer");
     deviceTable.add_device("printer3", "printer");
     deviceTable.add_device("disk1", "disk");
-    // Ê¹ÓÃÉè±¸ĞÅÏ¢±í³õÊ¼»¯Éè±¸¶ÓÁĞ
+    deviceTable.add_device("MyScreen", "screen", 5);
+    // ä½¿ç”¨è®¾å¤‡ä¿¡æ¯è¡¨åˆå§‹åŒ–è®¾å¤‡é˜Ÿåˆ—
     DeviceQueue deviceQueue(deviceTable);
 
-    // ´´½¨Éè±¸¹ÜÀí´°¿Ú
+    // åˆ›å»ºè®¾å¤‡ç®¡ç†çª—å£
     DeviceMainWindow deviceMainWindow(deviceTable, deviceQueue, 1);
     deviceMainWindow.show();
 
-    // ÆäËüÏß³ÌÄ£Äâ½ø³ÌÇëÇóÉè±¸
+    // å…¶å®ƒçº¿ç¨‹æ¨¡æ‹Ÿè¿›ç¨‹è¯·æ±‚è®¾å¤‡
     MyThread thread(deviceQueue, deviceMainWindow);
     thread.start();
 

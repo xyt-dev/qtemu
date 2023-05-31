@@ -3,7 +3,7 @@
 ######################################################################
 
 TEMPLATE = app
-TARGET = Source
+TARGET = ../DevcieModule
 INCLUDEPATH += .
 CONFIG += console # 控制台输出
 QT += widgets

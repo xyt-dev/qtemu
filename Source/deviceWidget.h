@@ -152,7 +152,8 @@ public slots:
 void updateDeviceStatus() {
     // 更新设备状态显示
     QString statusText;
-    for (const auto &device : deviceTable.deviceList) {
+    vector<Device> deviceList = deviceTable.get_device_list();
+    for (const auto &device : deviceList) {
         QString deviceStatus = device.status ? "Busy" : "Free";
         QString statusLine = QString("DeviceName: %1  |  Type: %2  |  DevicePriority: %3  |  Status: %4  |  Process: %5")
                                 .arg(QString::fromStdString(device.name))
@@ -217,7 +218,7 @@ void updateDeviceStatus() {
             // 屏幕打印
             if(request.find("print") != string::npos){
                 if(logger) cout << "设备 " << device_name << " 执行进程 " << process_name << " 的任务:[" << request << "]\n";
-                screenWindows["screen1"]->print(QString::fromStdString(argi(request, 2)));
+                screenWindows[device_name]->print(QString::fromStdString(argi(request, 2)));
             }
         // printer
         }else if(deviceTable[device_name].type == "printer"){
