@@ -134,7 +134,7 @@ public:
 
     vector<string> devices;                             // 设备名列表
     vector<string> types;                               // 设备类型列表
-    vector<string> available_devices;                   // 可用设备列表
+    vector<string> available_devices;                   // 空闲设备列表
     map<string, vector<DevRequest>> occupied_devices;   // 正在使用的设备字典，键为设备名，值为使用该设备的进程列表
 
     map<string, int> countRecord;                         // 防饿死机制
